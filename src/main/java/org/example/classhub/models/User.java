@@ -11,29 +11,24 @@ import java.util.List;
 
 @Entity
 @Table(name = "users")
-@Getter @Setter @EqualsAndHashCode
+@Getter @Setter @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class User {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @EqualsAndHashCode.Include
     private Long id;
 
     @Column(name = "name", nullable = false)
-    @NotBlank
     private String name;
 
     @Column(name = "surname", nullable = false)
-    @NotBlank
     private String surname;
 
     @Column(name = "email", nullable = false, unique = true)
-    @NotBlank
-    @Email
     private String email;
 
     @Column(name = "password", nullable = false)
-    @Size(min = 8)
-    @NotBlank
     private String password;
 
     @Enumerated(EnumType.STRING)

@@ -11,7 +11,7 @@ public record EnrollmentResponse(
         String courseTitle,
         Status status
 ) {
-    public static EnrollmentResponse fromEntity(Enrollment enrollment) {
+    public static EnrollmentResponse mapToResponse(Enrollment enrollment) {
         return new EnrollmentResponse(
                 enrollment.getId(),
                 enrollment.getStudent().getId(),

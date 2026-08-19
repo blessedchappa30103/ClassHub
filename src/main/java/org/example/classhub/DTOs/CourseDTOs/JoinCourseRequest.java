@@ -4,5 +4,4 @@ import jakarta.validation.constraints.NotBlank;
 
 public record JoinCourseRequest(
         @NotBlank String joinCode
-) {
-}
+) { }

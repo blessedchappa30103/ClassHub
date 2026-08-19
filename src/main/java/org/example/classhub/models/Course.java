@@ -19,11 +19,9 @@ public class Course {
     private Long id;
 
     @Column(name = "title", nullable = false)
-    @NotBlank
     private String title;
 
     @Column(name="join_code", nullable = false, unique = true)
-    @NotBlank
     private String joinCode;
 
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
