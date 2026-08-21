@@ -7,6 +7,7 @@ public record AnnouncementCreatedEvent(
         Long courseId,
         String courseTitle,
         String announcementContent,
-        List<String> studentEmails
+        List<String> studentEmails,
+        List<String> attachmentUrls
 ) {
 }

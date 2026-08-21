@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "announcments")
@@ -29,4 +31,7 @@ public class Announcement {
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id", nullable = false)
     private User author;
+
+    @OneToMany(mappedBy = "announcement", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Attachment> attachments = new ArrayList<>();
 }

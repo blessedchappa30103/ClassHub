@@ -41,9 +41,9 @@ public class CourseService {
         enrollment.setStudent(user);
         enrollment.setCourse(course);
         enrollment.setStatus(Status.ACTIVE);
-
         user.getEnrollments().add(enrollment);
-        return EnrollmentResponse.mapToResponse(enrollment);
+        Enrollment savedEnrollment = enrollmentRepository.save(enrollment);
+        return EnrollmentResponse.mapToResponse(savedEnrollment);
     }
 
     @Transactional
