@@ -19,6 +19,9 @@ public class User {
     @EqualsAndHashCode.Include
     private Long id;
 
+    @Column(name = "username")
+    private String username;
+
     @Column(name = "name", nullable = false)
     private String name;
 
