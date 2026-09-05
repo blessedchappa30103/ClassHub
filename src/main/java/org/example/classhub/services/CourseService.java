@@ -30,6 +30,7 @@ public class CourseService {
         Course course = new Course();
         course.setTitle(request.title());
         course.setJoinCode(UUID.randomUUID().toString().substring(0,6).toUpperCase());
+        course.setStatus(CourseStatus.ACTIVE);
         Course savedCourse = courseRepository.save(course);
         return CourseResponse.mapToResponse(savedCourse);
     }
@@ -77,6 +78,28 @@ public class CourseService {
     @Transactional(readOnly = true)
     public List<CourseResponse> getAllCourses(){
         return courseRepository.findAll().stream().map(CourseResponse::mapToResponse).toList();
+    }
+
+    @Transactional
+    public CourseResponse archiveCourse(Long courseId, Long teacherId){
+        User user = userRepository.findById(teacherId).orElseThrow(()-> new IllegalArgumentException("Пользователь не найден"));
+        if(user.getRole() != Role.TEACHER) throw new IllegalArgumentException("Только учитель может удалить курс");
+        Course course = courseRepository.findById(courseId).orElseThrow(()-> new IllegalArgumentException("Курс не найден"));
+        course.setStatus(CourseStatus.ARCHIVE);
+        List<Enrollment> activeEnrollments = enrollmentRepository.findAllByCourseIdAndStatus(courseId, Status.ACTIVE);
+        for (Enrollment enrollment : activeEnrollments) {
+            enrollment.setStatus(Status.COMPLETED);
+        }
+
+        return CourseResponse.mapToResponse(course);
+    }
+
+    @Transactional
+    public void deleteCourse(Long courseId, Long teacherId){
+        User user = userRepository.findById(teacherId).orElseThrow(()-> new IllegalArgumentException("Пользователь не найден"));
+        if(user.getRole() != Role.TEACHER) throw new IllegalArgumentException("Только учитель может удалить курс");
+        Course course = courseRepository.findById(courseId).orElseThrow(()-> new IllegalArgumentException("Курс не найден"));
+        courseRepository.delete(course);
     }
 
     @Transactional(readOnly = true)

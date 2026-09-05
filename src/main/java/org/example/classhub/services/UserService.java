@@ -28,6 +28,7 @@ public class UserService {
         User user = new User();
         user.setName(request.name());
         user.setSurname(request.surname());
+        user.setUsername(request.username());
         user.setEmail(request.email());
         user.setPassword(passwordEncoder.encode(request.password()));
         user.setRole(request.role());
@@ -42,6 +43,12 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
+    public UserResponse getUserByUsername(String username){
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new IllegalArgumentException(""));
+        return mapToResponse(user);
+    }
+
+    @Transactional(readOnly = true)
     public List<UserResponse> getAllUsers(){
         return userRepository.findAll().stream().map(UserResponse::mapToResponse).toList();
     }
@@ -49,6 +56,13 @@ public class UserService {
     public UserResponse getUserByEmail(String email){
         User user = userRepository.findByEmail(email).orElseThrow(()-> new IllegalArgumentException("Пользователь не найден"));
         return mapToResponse(user);
+    }
+    @Transactional
+    public UserResponse deleteUser(Long id){
+        User user = userRepository.findById(id).orElseThrow(()-> new IllegalArgumentException("Пользователь не найден"));
+        UserResponse response = mapToResponse(user);
+        userRepository.delete(user);
+        return response;
     }
     @Transactional(readOnly = true)
     public List<CourseResponse> getAllUserCourses(Long id){

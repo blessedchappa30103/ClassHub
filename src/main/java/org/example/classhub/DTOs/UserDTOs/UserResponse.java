@@ -7,6 +7,7 @@ public record UserResponse(
         Long id,
         String name,
         String surname,
+        String username,
         String email,
         Role role
 ) {
@@ -15,6 +16,7 @@ public record UserResponse(
                 user.getId(),
                 user.getName(),
                 user.getSurname(),
+                user.getUsername(),
                 user.getEmail(),
                 user.getRole()
         );

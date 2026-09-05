@@ -17,7 +17,7 @@ import java.util.List;
 public class AnnouncementController {
     private final AnnouncementService announcementService;
 
-    @PostMapping
+    @PostMapping()
     public ResponseEntity<AnnouncementResponse> createAnnouncement(
             @PathVariable Long courseId,
             @RequestParam Long authorId,

@@ -17,43 +17,56 @@ import java.util.List;
 @RequestMapping("/api/courses")
 @RequiredArgsConstructor
 public class CourseController {
+
     private final CourseService courseService;
+
     @PostMapping
-    public ResponseEntity<CourseResponse> createCourse(@RequestParam Long id, @Valid @RequestBody CreateCourseRequest request){
-        CourseResponse response = courseService.createCourse(id, request);
+    public ResponseEntity<CourseResponse> createCourse(@RequestParam Long teacherId, @Valid @RequestBody CreateCourseRequest request) {
+        CourseResponse response = courseService.createCourse(teacherId, request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
+
     @GetMapping("/{id}")
-    public ResponseEntity<CourseResponse> getCourseById(@RequestParam Long id){
-        CourseResponse response = courseService.getCourseById(id);
-        return ResponseEntity.status(HttpStatus.OK).body(response);
+    public ResponseEntity<CourseResponse> getCourseById(@PathVariable Long id) {
+        return ResponseEntity.ok(courseService.getCourseById(id));
     }
+
     @GetMapping
-    public ResponseEntity<List<CourseResponse>> getAllCourses(){
-         List<CourseResponse> responses = courseService.getAllCourses();
-         return ResponseEntity.status(HttpStatus.OK).body(responses);
+    public ResponseEntity<List<CourseResponse>> getAllCourses() {
+        return ResponseEntity.ok(courseService.getAllCourses());
     }
-    @PostMapping("/join")
-    public ResponseEntity<EnrollmentResponse> joinCourse(@RequestParam Long studentId, @RequestBody JoinCourseRequest request){
-        EnrollmentResponse response = courseService.joinCourse(studentId, request);
+
+    @PostMapping("/{id}/join")
+    public ResponseEntity<EnrollmentResponse> joinCourse(@PathVariable Long id, @Valid @RequestBody JoinCourseRequest request) {
+        EnrollmentResponse response = courseService.joinCourse(id, request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
-    @DeleteMapping
-    public ResponseEntity<EnrollmentResponse> leaveCourse(@RequestParam Long courseId, @RequestParam Long studentId){
-        EnrollmentResponse response = courseService.leaveCourse(courseId, studentId);
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+
+    @DeleteMapping("/{id}/leave")
+    public ResponseEntity<EnrollmentResponse> leaveCourse(@PathVariable Long id, @RequestParam Long studentId) {
+        EnrollmentResponse response = courseService.leaveCourse(id, studentId);
+        return ResponseEntity.ok(response);
+    }
+
+    @DeleteMapping("/{id}/students/{studentId}")
+    public ResponseEntity<EnrollmentResponse> removeStudentFromCourse(@PathVariable Long id, @PathVariable Long studentId, @RequestParam Long teacherId) {
+        EnrollmentResponse response = courseService.removeCourse(id, studentId, teacherId);
+        return ResponseEntity.ok(response);
+    }
+
+    @PatchMapping("/{id}/archive")
+    public ResponseEntity<CourseResponse> archiveCourse(@PathVariable Long id, @RequestParam Long teacherId) {
+        return ResponseEntity.ok(courseService.archiveCourse(id, teacherId));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<EnrollmentResponse> removeCourse(@RequestParam Long courseId, @RequestParam Long studentId, @RequestParam Long teacherId){
-        EnrollmentResponse response = courseService.removeCourse(courseId, studentId, teacherId);
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    public ResponseEntity<Void> deleteCourse(@PathVariable Long id, @RequestParam Long teacherId) {
+        courseService.deleteCourse(id, teacherId);
+        return ResponseEntity.noContent().build();
     }
-
-    @GetMapping("/active")
-    public ResponseEntity<List<EnrollmentResponse>> getAllActiveStudent(@RequestParam Long courseId){
-        List<EnrollmentResponse> responses = courseService.getAllActiveUsersInCourse(courseId);
-        return ResponseEntity.status(HttpStatus.OK).body(responses);
+    @GetMapping("/{id}/students")
+    public ResponseEntity<List<EnrollmentResponse>> getAllActiveStudents(@PathVariable Long id) {
+        List<EnrollmentResponse> responses = courseService.getAllActiveUsersInCourse(id);
+        return ResponseEntity.ok(responses);
     }
-
 }

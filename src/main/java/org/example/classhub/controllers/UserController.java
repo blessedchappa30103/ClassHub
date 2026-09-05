@@ -20,29 +20,41 @@ import java.util.List;
 public class UserController {
     private final UserService userService;
 
-    @PostMapping
+    @PostMapping()
     public ResponseEntity<UserResponse> createUser(@Valid @RequestBody CreateUserRequest request){
         UserResponse response = userService.createUser(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
+
+    @GetMapping
+    public ResponseEntity<?> getUsers(
+            @RequestParam(required = false) String username,
+            @RequestParam(required = false) String email) {
+
+        if (username != null) {
+            return ResponseEntity.ok(userService.getUserByUsername(username));
+        }
+        if (email != null) {
+            return ResponseEntity.ok(userService.getUserByEmail(email));
+        }
+        return ResponseEntity.ok(userService.getAllUsers());
+    }
+
     @GetMapping("/{id}")
-    public ResponseEntity<UserResponse> getUserById(@RequestParam Long id){
+    public ResponseEntity<UserResponse> getUserById(@PathVariable Long id){
         UserResponse response = userService.getUserById(id);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
-    @GetMapping
-    public ResponseEntity<List<UserResponse>> getAllUsers(){
-       List<UserResponse> response = userService.getAllUsers();
-       return ResponseEntity.status(HttpStatus.OK).body(response);
-    }
-    @GetMapping("/alluser")
-    public ResponseEntity<List<CourseResponse>> getAllUserCourse(@RequestParam Long id){
+
+    @GetMapping("/{id}/courses")
+    public ResponseEntity<List<CourseResponse>> getAllUserCourses(@PathVariable Long id){
         List<CourseResponse> response = userService.getAllUserCourses(id);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
-    @GetMapping("/{email}")
-    public ResponseEntity<UserResponse> getUserByEmail(@RequestParam @Valid String email){
-        UserResponse response = userService.getUserByEmail(email);
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<UserResponse> deleteUser(@PathVariable Long id){
+        UserResponse response = userService.deleteUser(id);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 }

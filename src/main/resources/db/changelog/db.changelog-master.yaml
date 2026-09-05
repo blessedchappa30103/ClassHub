@@ -3,3 +3,5 @@ databaseChangeLog:
       file: db/changelog/changes/21-01-changelog.xml
   - include:
       file: db/changelog/2026/09/01-01-changelog.xml
+  - include:
+      file: db/changelog/changes/06-01-changelog.xml

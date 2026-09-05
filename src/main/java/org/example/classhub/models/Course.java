@@ -24,6 +24,10 @@ public class Course {
     @Column(name="join_code", nullable = false, unique = true)
     private String joinCode;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status")
+    private CourseStatus status;
+
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Enrollment> enrollments = new ArrayList<>();
 }

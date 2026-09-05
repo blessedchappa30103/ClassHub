@@ -9,6 +9,7 @@ import org.example.classhub.models.Role;
 public record CreateUserRequest(
         @NotBlank String name,
         @NotBlank String surname,
+        @NotBlank String username,
         @NotBlank @Email String email,
         @NotBlank @Size(min = 8) String password,
         @NotNull Role role
